@@ -50,8 +50,8 @@ int hashmap_put(struct hashmap_s *const hashmap, const char* key, void* data)  /
     }
     if(head==NULL)
     {
-        struct listentry* new_entry=malloc(sizeof(struct listentry));
-        struct hashmap_element_s* key_data=malloc(sizeof(struct hashmap_element_s));
+        struct listentry* new_entry= malloc(sizeof(struct listentry));
+        struct hashmap_element_s* key_data= malloc(sizeof(struct hashmap_element_s));
         new_entry->data=key_data;
         key_data->key=malloc((strlen(key)+1)*sizeof(char));
         strcpy(key_data->key,key);
@@ -76,6 +76,22 @@ int hashmap_put(struct hashmap_s *const hashmap, const char* key, void* data)  /
 }
 void* hashmap_get(struct hashmap_s *const hashmap, const char* key)    // Fetch value of a key from hashmap
 {
+    int code_key=hash_code_map(key);
+    struct list* get_list=hashmap[code_key];
+    struct listentry* head=get_list->head;
+    while (head!=NULL && strcmp(((struct hash_element_s*)(head->data)->key),key)!=0)
+    {
+        head=head->next;
+    }
+    if(head==NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        return ((struct hash_element_s*)(head->data))->data;
+
+    }
 
 }
 void hashmap_iterator(struct hashmap_s* const hashmap,int (*f)(struct hashmap_element_s *const))  // Execute argument function on each key-value pair in hashmap
