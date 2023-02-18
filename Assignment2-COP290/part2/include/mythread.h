@@ -27,7 +27,7 @@ ucontext_t* mythread_create(void func(void*), void* arg) // Create a new thread
 	new_thread.uc_stack.ss_sp = st1;
     new_thread.uc_stack.ss_size =8192;
 	new_thread.uc_link = &mainctx;
-	makecontext(new_thread,(void (*)())func,0,arg);  // check here at last
+	makecontext(new_thread,(void (*)())func,1,arg);  // check here at last
 	list_add(thread_list,(void*)new_thread);
 
 	return new_thread;
