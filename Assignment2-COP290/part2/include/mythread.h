@@ -1,6 +1,8 @@
 #ifndef THREAD_H
 #define THREAD_H
 
+#define _XOPEN_SOURCE 600
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<ucontext.h>
@@ -19,13 +21,13 @@ void mythread_init()      // Initialize threads list
 }
 ucontext_t* mythread_create(void func(void*), void* arg) // Create a new thread
 {
-	char st1[8192];
+	char* st1=(char*)malloc(8192);
 	ucontext_t* new_thread=(ucontext_t*)malloc(sizeof(ucontext_t));
 	getcontext(new_thread);
 	new_thread.uc_stack.ss_sp = st1;
     new_thread.uc_stack.ss_size =8192;
 	new_thread.uc_link = &mainctx;
-	makecontext(new_thread,func,0,arg);
+	makecontext(new_thread,(void (*)())func,0,arg);  // check here at last
 	list_add(thread_list,(void*)new_thread);
 
 	return new_thread;
@@ -58,18 +60,21 @@ struct lock
 };
 struct lock* lock_new()  // return an initialized lock object
 {
-	struct lock* new_lock=(lock*)(malloc)(sizeof(lock));
+	struct lock* new_lock=(lock*)(malloc)(sizeof(struct lock));
 	new_lock->ctx=NULL;
 	return new_lock;
 }
 void lock_acquire(struct lock* lk)   // Set lock. Yield if lock is acquired by some other thread.
 {
-	
-
+	if(lk->ctx!=NULL)
+	{
+		mythread_yield();
+	}
+	lk->ctx=(ucontext_t*)curr->data;
 }
 int lock_release(struct lock* lk)   // Release lock
 {
-	
+	lk->ctx=NULL;
 }
 
 #endif
