@@ -33,7 +33,8 @@ static void f2 (char* word) {
     int* c = (int*) hashmap_get(&hashmap, word);
     int* c1 = (int*) malloc(sizeof(int));
     *c1 = 1;
-    if(c != NULL) {
+    if(c != NULL) 
+	 {
         for(int i = 0; i < *c; i ++) {
             mythread_yield();
         }

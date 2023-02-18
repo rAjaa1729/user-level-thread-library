@@ -72,7 +72,7 @@ int hashmap_put(struct hashmap_s *const hashmap, const char* key, void* data)  /
     }
     else
     {
-        ((struct hash_element_s*)(head->data))->data=data;
+        ((struct hashmap_element_s*)(head->data))->data=data;
     }
 }
 void* hashmap_get(struct hashmap_s *const hashmap, const char* key)    // Fetch value of a key from hashmap
@@ -80,7 +80,7 @@ void* hashmap_get(struct hashmap_s *const hashmap, const char* key)    // Fetch 
     int code_key=hash_code_map(key);
     struct list* get_list=hashmap->table[code_key];
     struct listentry* head=get_list->head;
-    while (head!=NULL && strcmp((((struct hash_element_s*)(head->data))->key),key)!=0)
+    while (head!=NULL && strcmp((((struct hashmap_element_s*)(head->data))->key),key)!=0)
     {
         head=head->next;
     }
@@ -90,7 +90,7 @@ void* hashmap_get(struct hashmap_s *const hashmap, const char* key)    // Fetch 
     }
     else
     {
-        return ((struct hash_element_s*)(head->data))->data;
+        return ((struct hashmap_element_s*)(head->data))->data;
 
     }
 
@@ -104,13 +104,14 @@ void hashmap_iterator(struct hashmap_s* const hashmap,int (*f)(struct hashmap_el
 
         while(head!=NULL)
         {
-            f((struct hash_element_s*)(head->data));
+            f((struct hashmap_element_s*)(head->data));
         }        
     }
 }
 
 int acquire_bucket(struct hashmap_s *const hashmap, const char* key) // Acquire lock on a hashmap slot
 {
+    int hash_value=hash_code_map(key);
 
 }
 int release_bucket(struct hashmap_s *const hashmap, const char* key)   // Release acquired lock

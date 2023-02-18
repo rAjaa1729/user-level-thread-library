@@ -1,5 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
+
 struct list 
 {
 	struct listentry* head;
@@ -42,6 +43,7 @@ void list_rm(struct list* l, struct listentry* e)    // Remove an item from the 
 			(head->next)->prev=head->prev;
 		}
 	}
+	free(e);
 }
 struct listentry* list_add(struct list* l, void* data)  // Add an item to the list
 {
