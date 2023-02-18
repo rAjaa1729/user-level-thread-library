@@ -105,7 +105,7 @@ void hashmap_iterator(struct hashmap_s* const hashmap,int (*f)(struct hashmap_el
         struct listentry* head=hashmap->table[i]->head;
         while(head!=NULL)
         {
-            // printf("inside iterator\n");
+            printf("inside iterator\n");
             f((struct hashmap_element_s*)(head->data));
             head=head->next;
         }        

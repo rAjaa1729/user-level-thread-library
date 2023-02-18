@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
     hashmap_create(&hashmap);
     printf("Testing threads!\n");
     mythread_init();
-    for(int i=1;i<argc;i++) {
+    for(int i=1;i<argc;i++) 
+	{
         mythread_create(readFile, (void *) argv[i]);
     }
     mythread_join();

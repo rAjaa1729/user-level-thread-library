@@ -18,6 +18,7 @@ void mythread_init()      // Initialize threads list
 {
 	thread_list=list_new();
 	curr=NULL;
+	printf("i am in thread init\n");
 }
 ucontext_t* mythread_create(void func(void*), void* arg) // Create a new thread
 {
@@ -29,6 +30,7 @@ ucontext_t* mythread_create(void func(void*), void* arg) // Create a new thread
 	new_thread->uc_link = &mainctx;
 	makecontext(new_thread,(void (*)())func,1,arg);  // check here at last
 	list_add(thread_list,(void*)new_thread);
+	printf("i am in thread create \n");
 	return new_thread;
 }
 void mythread_join()  // Waits for other thread to complete. It is used in case of dependent threads.
@@ -36,9 +38,11 @@ void mythread_join()  // Waits for other thread to complete. It is used in case 
 	struct listentry* head=thread_list->head;
 	while(head!=NULL)
 	{
+		printf("i am in thread while thread join \n");
 		swapcontext(&mainctx,(ucontext_t*)head->data);
 		head=head->next;
 	}
+	printf("i am in thread join\n");
 }
 void mythread_yield()  // Perform context switching here
 {
