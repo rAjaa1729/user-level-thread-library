@@ -1,8 +1,6 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-#define _XOPEN_SOURCE 600
-#include "list.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<ucontext.h>
@@ -10,75 +8,16 @@
 #include<sys/time.h>
 #include<unistd.h>
 
-struct list* thread_list;
-struct listentry* curr;
-ucontext_t mainctx;
+void mythread_init();      // Initialize threads list
+ucontext_t* mythread_create(void func(void*), void* arg);  // Create a new thread
+void mythread_join();  // Waits for other thread to complete. It is used in case of dependent threads.
+void mythread_yield();  // Perform context switching here
 
-void mythread_init()      // Initialize threads list
-{
-	thread_list=list_new();
-	curr=NULL;
-	printf("i am in thread init\n");
-}
-ucontext_t* mythread_create(void func(void*), void* arg) // Create a new thread
-{
-	char* st1=(char*)malloc(8192);
-	ucontext_t* new_thread=(ucontext_t*)malloc(sizeof(ucontext_t));
-	getcontext(new_thread);
-	new_thread->uc_stack.ss_sp = st1;
-    new_thread->uc_stack.ss_size =8192;
-	new_thread->uc_link = &mainctx;
-	makecontext(new_thread,(void (*)())func,1,arg);  // check here at last
-	list_add(thread_list,(void*)new_thread);
-	printf("i am in thread create \n");
-	return new_thread;
-}
-void mythread_join()  // Waits for other thread to complete. It is used in case of dependent threads.
-{
-	struct listentry* head=thread_list->head;
-	while(head!=NULL)
-	{
-		printf("i am in thread while thread join \n");
-		swapcontext(&mainctx,(ucontext_t*)head->data);
-		head=head->next;
-	}
-	printf("i am in thread join\n");
-}
-void mythread_yield()  // Perform context switching here
-{
-	if(curr==NULL)
-	{
-		curr=thread_list->head;
-	}
-	else
-	{
-		curr=curr->next;
-	}
-	swapcontext(&mainctx,(ucontext_t*)curr->data);
-}
-
-struct lock 
-{
+struct lock {
 	ucontext_t* ctx;
 };
-struct lock* lock_new()  // return an initialized lock object
-{
-	struct lock* new_lock=(struct lock*)(malloc(sizeof(struct lock)));
-	new_lock->ctx=NULL;
-	return new_lock;
-}
-void lock_acquire(struct lock* lk)   // Set lock. Yield if lock is acquired by some other thread.
-{
-	if(lk->ctx!=NULL)
-	{
-		mythread_yield();
-	}
-	lk->ctx=(ucontext_t*)curr->data;
-}
-int lock_release(struct lock* lk)   // Release lock
-{
-	lk->ctx=NULL;
-    return 1;
-}
+struct lock* lock_new();   // return an initialized lock object
+void lock_acquire(struct lock* lk);   // Set lock. Yield if lock is acquired by some other thread.
+int lock_release(struct lock* lk);   // Release lock
 
 #endif
