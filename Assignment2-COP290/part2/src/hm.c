@@ -1,6 +1,9 @@
 
 #include "../include/list.h"
 #include "../include/mythread.h"
+#include<string.h>
+#include<stdlib.h>
+
 #define SZ 4096
 
 struct hashmap_element_s 
@@ -114,6 +117,7 @@ void hashmap_iterator(struct hashmap_s* const hashmap,int (*f)(struct hashmap_el
 int acquire_bucket(struct hashmap_s *const hashmap, const char* key) // Acquire lock on a hashmap slot
 {
     int hash_value=hash_code_map(key);
+    hashmap->lk[hash_value]=lock_new();
     lock_acquire(hashmap->lk[hash_value]);
     return 1;
 }
