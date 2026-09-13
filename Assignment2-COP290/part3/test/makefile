@@ -1,2 +1,0 @@
-report:
-	pdflatex texample.tex

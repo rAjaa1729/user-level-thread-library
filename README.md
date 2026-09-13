@@ -1,11 +1,14 @@
-# COP290-Assignment2
+# User-Level Thread Library
 
+An Operating Systems assignment (IIT Delhi, COP290) building a
+cooperative thread library from scratch on top of `ucontext` — the raw
+mechanism the OS itself uses for context switching, exposed to
+user-space C.
 
-Assignment 2
-This assignment currently contains 2 parts part1 - Here you need to complete functions - conjecture and assert. part2 - Here you need to complete 3 checkpoints as stated in the assignment document
+| Project | What it is |
+|---|---|
+| [thread-library](thread-library) | The actual deliverable: green threads, locks, a hash map and linked list built to test them |
+| [backtracking-rollback](backtracking-rollback) | A separate small exercise using the same `ucontext` mechanism for backtracking search |
+| [warmup](warmup) | Small C/`ucontext` exercises done first |
 
-In part 2, students should not change main.c present in test folder. This file will be used for evaluation.
-
-Students should update makefile. Currently it contains commands for running list tests. To run list tests after completion of list.c file. Run command "make list"
-
-Just like list tag in makefile, students need to create hashmap tag and all tag for running hashmap tests and main test respectively.
+Start with [thread-library](thread-library) if you want the main thing.
